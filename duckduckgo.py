@@ -1,7 +1,6 @@
 """python wrapper for the duck duck go zero-click api"""
 
-import urllib
-import urllib2
+import urllib.request, urllib.parse, urllib.error
 import json as jsonlib
 
 
@@ -16,21 +15,21 @@ def search(query, **kwargs):
         'skip_disambig': '1',
         }
     params.update(kwargs)
-    enc_params = urllib.urlencode(params)
+    enc_params = urllib.parse.urlencode(params)
     url = 'http://api.duckduckgo.com/?' + enc_params
 
     try:
-        request = urllib2.Request(url, headers={'User-Agent': useragent})
-        response = urllib2.urlopen(request)
+        request = urllib.request.Request(url, headers={'User-Agent': useragent})
+        response = urllib.request.urlopen(request)
         json = jsonlib.loads(response.read())
         response.close()
         return Results(json)
-    except urllib2.HTTPError, err:
-        print 'Query failed with HTTPError code ' + str(err.code)
-    except urllib2.URLError, err:
-        print 'Query failed with URLError ' + str(err.reason)
+    except urllib.error.HTTPError as err:
+        print('Query failed with HTTPError code ' + str(err.code))
+    except urllib.error.URLError as err:
+        print('Query failed with URLError ' + str(err.reason))
     except Exception:
-        print 'Unhandled exception'
+        print('Unhandled exception')
         raise
     return None
 
