@@ -21,7 +21,7 @@ def search(query, **kwargs):
     try:
         request = urllib.request.Request(url, headers={'User-Agent': useragent})
         response = urllib.request.urlopen(request)
-        json = jsonlib.loads(response.read())
+        json = jsonlib.loads(response.read().decode('utf-8'))
         response.close()
         return Results(json)
     except urllib.error.HTTPError as err:
