@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+
 """Retrieve results from the DuckDuckGo zero-click API in simple HTML format"""
 
 import json as jsonlib
+import logging
 import re
 import urllib.request, urllib.error, urllib.parse
 
@@ -68,11 +71,11 @@ def search(query, useragent='duckduckgo2html', **kwargs):
         response.close()
         return Results(json)
     except urllib.error.HTTPError as err:
-        print('Query failed with HTTPError code ' + str(err.code))
+        logging.error('Query failed with HTTPError code %s', err.code)
     except urllib.error.URLError as err:
-        print('Query failed with URLError ' + str(err.reason))
+        logging.error('Query failed with URLError %s', err.reason)
     except Exception:
-        print('Unhandled exception')
+        logging.error('Unhandled exception')
         raise
     return None
 
@@ -131,7 +134,6 @@ class _ResultList(_ResultItemBase):
     def __init__(self, name, items):
         super().__init__(name)
         self.items = [Result(x) for x in items]
-        print('Created list %r with %i children.' % (name, len(self.items)))
 
     def children(self):
         return self.items
@@ -225,3 +227,24 @@ class Redirect(_ResultItemBase):
 
     def as_html(self):
         return _html_url(self.url) if self.url else None
+
+
+if __name__ == '__main__':
+
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('query', nargs='*', help='the search query')
+    args = parser.parse_args()
+
+    if args.query:
+        queries = [' '.join(args.query)]
+    elif not sys.stdin.isatty():
+        queries = sys.stdin.read().splitlines()
+    else:
+        parser.print_help()
+        sys.exit(1)
+
+    for query in queries:
+        print(results2html(search(query)))
