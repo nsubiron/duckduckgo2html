@@ -62,7 +62,7 @@ def search(query, useragent='duckduckgo2html', **kwargs):
         'no_redirect': '1',
         'no_html': '1',
         'skip_disambig': '0',
-        }
+    }
     params.update(kwargs)
     enc_params = urllib.parse.urlencode(params)
     url = 'http://api.duckduckgo.com/?' + enc_params
@@ -228,6 +228,9 @@ class Redirect(_ResultItemBase):
     def __init__(self, json):
         super().__init__('Redirect')
         self.url = json['Redirect']
+
+    def is_complete(self):
+        return True if self.url else False
 
     def as_html(self):
         return _html_url(self.url) if self.url else None
