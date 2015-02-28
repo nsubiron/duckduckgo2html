@@ -1,5 +1,20 @@
-ddg
-===
+duckduckgo2html, Pretty print DuckDuckGo API results
+====================================================
+
+Copyright (C) 2015  N. Subiron
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+ddg, DuckDuckGo zero-click api for your command-line
+====================================================
 
 Copyright (c) 2012, Justin Shrake
 
@@ -20,8 +35,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-original duckduckgo python module
-=================================
+duckduckgo, Library for querying the Duck Duck Go API
+=====================================================
 
 Copyright (c) 2010, Michael Stephens
 
