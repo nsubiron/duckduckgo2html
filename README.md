@@ -1,8 +1,8 @@
-duckduckgo
-==========
+duckduckgo2html
+===============
 
-A Python library for querying the [DuckDuckGo](https://duckduckgo.com)
-zero-click API.
+Python 3 library to retrieve results from the
+[DuckDuckGo zero-click API](https://api.duckduckgo.com) in simple HTML format.
 
 `duckduckgo.py` is a modification (ported to Python 3) of the duckduckgo module
 of [ddg](https://github.com/jshrake/ddg) by Justin Shrake.
