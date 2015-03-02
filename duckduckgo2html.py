@@ -202,7 +202,7 @@ class Answer(_ResultItemBase):
         return True if self.text else False
 
     def as_html(self):
-        return self.text
+        return self.text.replace('\n', '<br>').replace('\r', '')
 
 
 class Definition(_ResultItemBase):
