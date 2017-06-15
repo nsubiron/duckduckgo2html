@@ -264,7 +264,15 @@ class Infobox(_ResultItemBase):
 if __name__ == '__main__':
 
     import argparse
+    import inspect
     import sys
+
+    import lxml.etree
+    import lxml.html
+
+    def pretty_print_html(html_string):
+        root = lxml.html.fromstring(html_string)
+        print(lxml.etree.tostring(root, encoding='unicode', pretty_print=True))
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -275,6 +283,18 @@ if __name__ == '__main__':
         '-v', '--version',
         action='version',
         version='%(prog)s v{0}.{1}.{2}'.format(*__version__))
+    parser.add_argument(
+        '-p', '--pretty-print',
+        action='store_true',
+        help='pretty print the resulting html')
+
+    # Add every argument of results2html function as command-line argument.
+    argspec = inspect.getargspec(results2html)
+    for argument, default_value in zip(argspec.args[1:], argspec.defaults):
+        parser.add_argument(
+            '--' + argument,
+            default=default_value)
+
     args = parser.parse_args()
 
     logging.basicConfig(format='%(levelname)s: %(filename)s: %(message)s')
@@ -287,9 +307,15 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(1)
 
+    print_html = pretty_print_html if args.pretty_print else print
+
+    kwargs = vars(args)
+    kwargs.pop('query', None)
+    kwargs.pop('pretty_print', None)
+
     for query in queries:
-        html = results2html(search(query))
+        html = results2html(search(query), **kwargs)
         if html:
-            print(html)
+            print_html(html)
         else:
             logging.warning('No results found')
