@@ -264,7 +264,6 @@ class Infobox(_ResultItemBase):
 if __name__ == '__main__':
 
     import argparse
-    import inspect
     import sys
 
     import lxml.etree
@@ -288,12 +287,41 @@ if __name__ == '__main__':
         action='store_true',
         help='pretty print the resulting html')
 
-    # Add every argument of results2html function as command-line argument.
-    argspec = inspect.getargspec(results2html)
-    for argument, default_value in zip(argspec.args[1:], argspec.defaults):
-        parser.add_argument(
-            '--' + argument,
-            default=default_value)
+    # results2html function arguments.
+    parser.add_argument(
+        '--results-priority',
+        default=None,
+        metavar='STR',
+        nargs='+',
+        help='')
+    parser.add_argument(
+        '--max-number-of-results',
+        default=None,
+        metavar='N',
+        type=int,
+        help='')
+    parser.add_argument(
+        '--ignore-incomplete',
+        action='store_true',
+        help='')
+    parser.add_argument(
+        '--always_show_related',
+        action='store_true',
+        help='')
+    parser.add_argument(
+        '--header-start-level',
+        default=1,
+        metavar='N',
+        type=int,
+        help='')
+    parser.add_argument(
+        '--hide-headers',
+        action='store_true',
+        help='')
+    parser.add_argument(
+        '--hide-signature',
+        action='store_true',
+        help='')
 
     args = parser.parse_args()
 
