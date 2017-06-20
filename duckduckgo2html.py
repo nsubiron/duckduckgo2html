@@ -8,29 +8,29 @@ import re
 import urllib.request, urllib.error, urllib.parse
 
 
-__version__ = (1, 0, 0)
+__version__ = (2, 0, 0)
 
 
-def results2html(results, results_priority=None, max_number_of_results=None,
+def results2html(results, section_priority=None, max_number_of_sections=None,
                  ignore_incomplete=True, always_show_related=False,
-                 header_start_level=1, hide_headers=False, hide_signature=False):
+                 header_start_level=1, hide_headers=False, hide_footer=False):
     if not results:
         return ''
 
-    if not results_priority:
-        results_priority = ['answer', 'abstract', 'definition', 'results',
+    if not section_priority:
+        section_priority = ['answer', 'abstract', 'definition', 'results',
                             'infobox', 'redirect', 'related']
 
     if not always_show_related:
-        other = [x for x in results_priority if x != 'related']
+        other = [x for x in section_priority if x != 'related']
         if any(results.get(x).is_complete() for x in other):
-            results_priority = other
+            section_priority = other
 
     html_header = '<h{level:d}>{title}</h{level:d}>'
     html_paragraph = '<p>{contents}</p>'
 
     html_contents = []
-    children = [results.get(x) for x in results_priority]
+    children = [results.get(x) for x in section_priority]
     results_count = 0
     for level, child in _iterchildren(header_start_level, children):
         html = child.as_html()
@@ -41,14 +41,14 @@ def results2html(results, results_priority=None, max_number_of_results=None,
         if valid:
             html_contents.append(html_paragraph.format(contents=html))
             results_count += 1
-            if max_number_of_results and results_count >= max_number_of_results:
+            if max_number_of_sections and results_count >= max_number_of_sections:
                 break
 
     html_contents[:] = [x for x in html_contents if x]
     if not html_contents:
         return ''
 
-    if not hide_signature:
+    if not hide_footer:
         html_contents.append('<footer><small>Results from DuckDuckGo</small></footer>')
 
     return ''.join(html_contents).strip()
@@ -289,39 +289,39 @@ if __name__ == '__main__':
 
     # results2html function arguments.
     parser.add_argument(
-        '--results-priority',
+        '--section-priority',
         default=None,
         metavar='STR',
         nargs='+',
-        help='')
+        help='List of section names to be displayed in the given order, e.g. "--section-priority abstract answer"')
     parser.add_argument(
-        '--max-number-of-results',
+        '--max-number-of-sections',
         default=None,
         metavar='N',
         type=int,
-        help='')
+        help='Maximum number of sections to be displayed')
     parser.add_argument(
         '--ignore-incomplete',
         action='store_true',
-        help='')
+        help='Ignore incomplete sections')
     parser.add_argument(
-        '--always_show_related',
+        '--always-show-related',
         action='store_true',
-        help='')
+        help='Always show "Related topics" section')
     parser.add_argument(
         '--header-start-level',
         default=1,
-        metavar='N',
+        metavar='L',
         type=int,
-        help='')
+        help='Start html header hierarchy at level L')
     parser.add_argument(
         '--hide-headers',
         action='store_true',
-        help='')
+        help='Hide html headers')
     parser.add_argument(
-        '--hide-signature',
+        '--hide-footer',
         action='store_true',
-        help='')
+        help='Hide "Results from DuckDuckGo" footer')
 
     args = parser.parse_args()
 
